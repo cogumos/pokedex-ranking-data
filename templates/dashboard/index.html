@@ -1,0 +1,186 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ nome_projeto }}</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/configuracao/configuracao.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/card/carta.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard/dashboard.css') }}">
+</head>
+<body>
+  <div class="abertura" id="abertura">
+    <div class="luz"></div>
+    <div class="pokebola"></div>
+    <h1>{{ nome_projeto }}</h1>
+  </div>
+  <main class="pokedex">
+    <header class="topo">
+      <div class="lente"></div>
+      <div class="leds">
+        <div class="led um"></div>
+        <div class="led dois"></div>
+        <div class="led tres"></div>
+      </div>
+      <div class="titulo">
+        <div class="titulo-linha">
+          <h2>{{ nome_projeto }}</h2>
+          <button id="botao-download-topo" class="botao-download download-topo oculto" title="Baixar coleta finalizada" aria-label="Baixar coleta finalizada">↓</button>
+        </div>
+        <p>coleta automática com Selenium e ranking Pokémon</p>
+      </div>
+      <div class="acoes-topo">
+        <button id="botao-config-topo" class="config-topo">Configuração</button>
+      </div>
+    </header>
+    <section class="corpo">
+      <aside class="esq">
+        <section class="bloco">
+          <h3>Controle da Coleta</h3>
+          <div class="box controle">
+            <label for="modo-coleta">Modo de coleta</label>
+            <select id="modo-coleta">
+              <option value="quantidade">Coletar quantidade de Pokémon</option>
+              <option value="mais_forte">Buscar o Pokémon mais forte de todos os tempos</option>
+            </select>
+            <div id="campo-quantidade" class="campo-quantidade">
+              <label for="quantidade">Quantidade de Pokémon</label>
+              <input id="quantidade" type="number" min="1" max="2000" value="151" inputmode="numeric" pattern="[0-9]*">
+            </div>
+            <div class="botoes">
+              <button id="botao-iniciar" class="iniciar">Iniciar coleta</button>
+              <button id="botao-apagar" class="apagar">Apagar coleta</button>
+            </div>
+            <div id="visor" class="visor">Status: aguardando</div>
+          </div>
+        </section>
+        <section class="bloco logs">
+          <h3>Navegador e Selenium</h3>
+          <pre id="logs"></pre>
+        </section>
+      </aside>
+      <section class="dir">
+        <section class="bloco ranking">
+          <div class="titulo-bloco">
+            <h3>Top 10 mais fortes (dos coletados abaixo)</h3>
+            <button id="botao-download-top10" class="botao-download oculto" title="Baixar Top 10" aria-label="Baixar Top 10">↓</button>
+          </div>
+          <div class="wrap">
+            <table>
+              <thead>
+                <tr><th>Pos</th><th>ID</th><th>Nome</th><th>Total</th></tr>
+              </thead>
+              <tbody id="ranking-corpo"></tbody>
+            </table>
+          </div>
+        </section>
+        <section class="bloco pokemon">
+          <div class="titulo-bloco">
+            <h3>Dados coletados</h3>
+            <button id="botao-download-dados" class="botao-download oculto" title="Baixar dados coletados" aria-label="Baixar dados coletados">↓</button>
+          </div>
+          <div class="res">
+            <span id="resumo-quantidade">0 Pokémon coletados</span>
+            <span id="resumo-progresso">0/0</span>
+          </div>
+          <div class="grade" id="grade"></div>
+        </section>
+      </section>
+    </section>
+    <section class="tela-config" id="tela-config">
+      <div class="config-cabecalho">
+        <h3>TELA DE CONFIGURAÇÃO</h3>
+        <button id="botao-fechar-config" class="botao-voltar-config">Voltar</button>
+      </div>
+      <div class="config-conteudo">
+        <div class="config-info">
+          <div class="config-cartao"><span>Projeto</span><strong>{{ nome_projeto }}</strong></div>
+          <div class="config-cartao"><span>Versão</span><strong>{{ versao_projeto }}</strong></div>
+          <div class="config-cartao"><span>Criadora</span><strong>{{ criador_projeto }}</strong></div>
+          <div class="config-cartao"><span>GitHub</span><a href="{{ github_criador }}" target="_blank" rel="noopener noreferrer">github.com/cogumos</a></div>
+          <div class="campo-navegador">
+            <label for="navegador-config">Navegador para Selenium</label>
+            <select id="navegador-config">
+              {% for chave, nome in navegadores_disponiveis.items() %}
+              <option value="{{ chave }}">{{ nome }}</option>
+              {% endfor %}
+            </select>
+            <label for="headless-config">Modo de execução</label>
+            <select id="headless-config">
+              <option value="true">Em segundo plano (headless)</option>
+              <option value="false">Visual (com janela)</option>
+            </select>
+            <label for="timeout-config">Tempo de espera por página (segundos)</label>
+            <input id="timeout-config" type="number" min="5" max="120" step="1" value="25" inputmode="numeric" pattern="[0-9]*">
+            <label for="largura-config">Largura da janela</label>
+            <input id="largura-config" type="number" min="900" max="3000" step="10" value="1700" inputmode="numeric" pattern="[0-9]*">
+            <label for="altura-config">Altura da janela</label>
+            <input id="altura-config" type="number" min="600" max="2000" step="10" value="1100" inputmode="numeric" pattern="[0-9]*">
+            <label for="intervalo-config">Intervalo entre requisições (ms)</label>
+            <input id="intervalo-config" type="number" min="0" max="5000" step="50" value="0" inputmode="numeric" pattern="[0-9]*">
+            <button id="botao-salvar-config" class="botao-salvar-config">Salvar configuração</button>
+            <div id="status-config" class="status-config">A configuração aplicada vale para a próxima coleta.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="tela-carta" id="tela-carta">
+      <div class="carta-cabecalho">
+        <h3>CARTA 3D DO POKÉMON</h3>
+        <button id="botao-fechar-carta" class="botao-fechar-carta">Fechar</button>
+      </div>
+      <div id="carta-palco" class="carta-palco">
+        <div id="carta3d" class="carta3d">
+          <article class="face-carta face-frente">
+            <div class="carta-frente-topo">
+              <span id="carta-id" class="id">#---</span>
+              <span id="carta-nome">Pokémon</span>
+            </div>
+            <img id="carta-imagem" class="imagem-carta" src="" alt="pokemon">
+            <div id="carta-tipos" class="tipos"></div>
+            <div id="carta-stats" class="stats"></div>
+            <div id="carta-evolucoes" class="ev"></div>
+          </article>
+          <article class="face-carta face-verso">
+            <img src="{{ url_for('static', filename='card.jpg') }}" alt="verso da carta">
+          </article>
+        </div>
+      </div>
+      <div class="acoes-carta">
+        <button id="botao-girar-carta" class="botao-girar-carta">Ver verso</button>
+      </div>
+    </section>
+  </main>
+  <nav id="menu-contexto" class="menu-contexto"></nav>
+  <section id="popup-overlay" class="popup-overlay" aria-hidden="true">
+    <article class="popup-modal" role="dialog" aria-modal="true" aria-labelledby="popup-titulo">
+      <header class="popup-topo">
+        <div class="popup-bola"></div>
+        <h3 id="popup-titulo">Aviso</h3>
+      </header>
+      <div id="popup-mensagem" class="popup-mensagem"></div>
+      <div class="popup-acoes">
+        <button id="popup-fechar" class="popup-fechar">Entendi</button>
+      </div>
+    </article>
+  </section>
+  <script>
+    window.dadosProjeto = {
+      nomeProjeto: {{ nome_projeto | tojson }},
+      versaoProjeto: {{ versao_projeto | tojson }},
+      criadorProjeto: {{ criador_projeto | tojson }},
+      githubCriador: {{ github_criador | tojson }},
+      navegadoresDisponiveis: {{ navegadores_disponiveis | tojson }}
+    };
+  </script>
+  <script src="{{ url_for('static', filename='js/dashboard/estado.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/card/carta_3d.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/configuracao/configuracao.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/dashboard/dashboard.js') }}"></script>
+</body>
+</html>

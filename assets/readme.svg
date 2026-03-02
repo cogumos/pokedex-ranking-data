@@ -1,0 +1,217 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="420" viewBox="0 0 1600 420" role="img" aria-label="pokedex-ranking-data">
+  <defs>
+    <!-- Cores / gradientes -->
+    <linearGradient id="bodyRed" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff4a4a"/>
+      <stop offset="0.55" stop-color="#d3002c"/>
+      <stop offset="1" stop-color="#a40022"/>
+    </linearGradient>
+
+    <linearGradient id="bodyHighlight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="0.35" stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+
+    <linearGradient id="screen" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#bfffe2"/>
+      <stop offset="1" stop-color="#70f7bf"/>
+    </linearGradient>
+
+    <linearGradient id="screenDark" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0d6b3a"/>
+      <stop offset="1" stop-color="#083c22"/>
+    </linearGradient>
+
+    <radialGradient id="lensBlue" cx="35%" cy="30%" r="70%">
+      <stop offset="0" stop-color="#c9f3ff"/>
+      <stop offset="0.45" stop-color="#2fc2ff"/>
+      <stop offset="1" stop-color="#0b4a7a"/>
+    </radialGradient>
+
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.28"/>
+    </filter>
+
+    <filter id="innerGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2.4" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Clip da tela para scanlines -->
+    <clipPath id="screenClip">
+      <rect x="330" y="175" rx="26" ry="26" width="920" height="140"/>
+    </clipPath>
+
+    <style>
+      .title {
+        font-family: "Press Start 2P","VT323","Trebuchet MS","Verdana",monospace;
+        font-weight: 800;
+        letter-spacing: 1px;
+      }
+      .ui {
+        font-family: "Trebuchet MS","Verdana",sans-serif;
+        letter-spacing: 0.6px;
+      }
+    </style>
+  </defs>
+
+  <!-- Fundo transparente (não desenhar background) -->
+  <g filter="url(#softShadow)">
+    <!-- Corpo principal (com recorte tipo Pokédex + “bico” direito) -->
+    <path d="
+      M120 88
+      Q120 55 154 55
+      H1080
+      Q1120 55 1145 80
+      L1285 220
+      Q1310 245 1310 278
+      V330
+      Q1310 360 1280 360
+      H154
+      Q120 360 120 328
+      Z"
+      fill="url(#bodyRed)" stroke="#6f0015" stroke-width="10" />
+
+    <!-- Dobra/hinge central -->
+    <g opacity="0.95">
+      <rect x="1080" y="70" width="44" height="305" rx="18" fill="#7a0018" />
+      <rect x="1088" y="85" width="28" height="275" rx="14" fill="#ff8a8a" opacity="0.18"/>
+      <!-- Parafusos -->
+      <g fill="#1a1a1a" opacity="0.7">
+        <circle cx="1102" cy="108" r="5"/><circle cx="1102" cy="332" r="5"/>
+        <circle cx="1114" cy="108" r="5"/><circle cx="1114" cy="332" r="5"/>
+      </g>
+    </g>
+
+    <!-- Reflexo superior no corpo -->
+    <path d="
+      M150 75
+      H1030
+      Q1065 75 1090 100
+      L1200 210
+      Q1222 232 1222 260
+      V260
+      Q1222 180 1165 125
+      L1070 30
+      Q1040 0 990 0
+      H190
+      Q150 0 150 40
+      Z"
+      transform="translate(0,55)"
+      fill="url(#bodyHighlight)" opacity="0.9"/>
+
+    <!-- Painel superior esquerdo com lente -->
+    <g transform="translate(175 120)">
+      <!-- Base -->
+      <path d="M0 0 h210 q28 0 28 28 v40 q0 28-28 28 H28 Q0 96 0 68 Z"
+            fill="#b20026" stroke="#6f0015" stroke-width="8"/>
+      <!-- Lente grande -->
+      <circle cx="60" cy="48" r="32" fill="url(#lensBlue)" stroke="#07304f" stroke-width="8"/>
+      <circle cx="48" cy="37" r="10" fill="#e7fbff" opacity="0.85"/>
+      <!-- LEDs -->
+      <g transform="translate(128 28)">
+        <circle cx="0" cy="0" r="10" fill="#ffdf3b" stroke="#7a5a00" stroke-width="5">
+          <animate attributeName="opacity" values="0.35;1;0.35" dur="1.4s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="34" cy="0" r="10" fill="#45ff7a" stroke="#0f6a2a" stroke-width="5">
+          <animate attributeName="opacity" values="1;0.35;1" dur="1.6s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="68" cy="0" r="10" fill="#ff5a5a" stroke="#7a0016" stroke-width="5">
+          <animate attributeName="opacity" values="0.6;1;0.6" dur="1.1s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+    </g>
+
+    <!-- Tela -->
+    <g>
+      <rect x="315" y="160" rx="34" ry="34" width="950" height="170"
+            fill="#0b3f24" opacity="0.35"/>
+      <rect x="330" y="175" rx="26" ry="26" width="920" height="140"
+            fill="url(#screen)" stroke="#0d6b3a" stroke-width="10"/>
+
+      <!-- Scanlines animadas (clipped na tela) -->
+      <g clip-path="url(#screenClip)" opacity="0.18">
+        <g>
+          <rect x="330" y="185" width="920" height="10" fill="#073a1f"/>
+          <rect x="330" y="215" width="920" height="10" fill="#073a1f"/>
+          <rect x="330" y="245" width="920" height="10" fill="#073a1f"/>
+          <rect x="330" y="275" width="920" height="10" fill="#073a1f"/>
+          <rect x="330" y="305" width="920" height="10" fill="#073a1f"/>
+          <animateTransform attributeName="transform" type="translate"
+            values="0,-40; 0,40; 0,-40" dur="3.2s" repeatCount="indefinite"/>
+        </g>
+      </g>
+
+      <!-- Brilho varrendo a tela -->
+      <g clip-path="url(#screenClip)" opacity="0.22">
+        <rect x="-260" y="175" width="240" height="140" fill="#ffffff"/>
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 1800,0" dur="2.8s" repeatCount="indefinite"/>
+      </g>
+
+      <!-- Texto -->
+      <text x="790" y="255" text-anchor="middle" class="title"
+            font-size="46" fill="#06311b" filter="url(#innerGlow)">
+        pokedex-ranking-data
+        <animate attributeName="opacity" values="0.92;1;0.92" dur="1.8s" repeatCount="indefinite"/>
+      </text>
+
+      <!-- Barrinha/status -->
+      <g opacity="0.9">
+        <rect x="360" y="290" width="230" height="10" rx="5" fill="url(#screenDark)"/>
+        <rect x="600" y="290" width="180" height="10" rx="5" fill="url(#screenDark)" opacity="0.7"/>
+        <rect x="790" y="290" width="420" height="10" rx="5" fill="url(#screenDark)" opacity="0.45"/>
+      </g>
+
+      <text x="352" y="320" class="ui" font-size="14" fill="#0b5b32" opacity="0.85">
+        MODE: RANKING • SYNC: ON • DEX-ID: 025
+      </text>
+    </g>
+
+    <!-- Pokébola no lado direito (com “click” animado) -->
+    <g transform="translate(1360 130)">
+      <g>
+        <circle cx="0" cy="120" r="70" fill="#ffffff" stroke="#111" stroke-width="12"/>
+        <!-- metade vermelha -->
+        <path d="M-70 120 A70 70 0 0 1 70 120" fill="#e60023" stroke="#111" stroke-width="12"/>
+        <!-- faixa -->
+        <rect x="-70" y="112" width="140" height="16" fill="#111"/>
+        <!-- botão -->
+        <circle cx="0" cy="120" r="22" fill="#fff" stroke="#111" stroke-width="12"/>
+        <circle cx="-8" cy="112" r="7" fill="#d9f3ff" opacity="0.9"/>
+
+        <!-- “pulse” do botão -->
+        <circle cx="0" cy="120" r="22" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.0">
+          <animate attributeName="r" values="22;42;22" dur="1.9s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.5;0" dur="1.9s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- micro balanço -->
+        <animateTransform attributeName="transform" type="rotate"
+          values="-2 0 120; 2 0 120; -2 0 120" dur="2.6s" repeatCount="indefinite"/>
+      </g>
+    </g>
+
+    <!-- Botões inferiores com “breathing” -->
+    <g transform="translate(320 350)">
+      <g>
+        <rect x="0" y="-32" rx="16" ry="16" width="170" height="40" fill="#2b2b2b" stroke="#111" stroke-width="7"/>
+        <text x="85" y="-6" text-anchor="middle" class="ui" font-size="14" fill="#f2f2f2">DATA</text>
+      </g>
+      <g transform="translate(200 0)">
+        <rect x="0" y="-32" rx="16" ry="16" width="170" height="40" fill="#2b2b2b" stroke="#111" stroke-width="7"/>
+        <text x="85" y="-6" text-anchor="middle" class="ui" font-size="14" fill="#f2f2f2">RANK</text>
+      </g>
+      <g transform="translate(400 0)">
+        <rect x="0" y="-32" rx="16" ry="16" width="260" height="40" fill="#0a3a8a" stroke="#041a3d" stroke-width="7" opacity="0.95">
+          <animate attributeName="opacity" values="0.75;1;0.75" dur="2.2s" repeatCount="indefinite"/>
+        </rect>
+        <text x="130" y="-6" text-anchor="middle" class="ui" font-size="14" fill="#d6ecff">EXPORT</text>
+      </g>
+    </g>
+  </g>
+</svg>

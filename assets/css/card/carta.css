@@ -1,0 +1,187 @@
+﻿.tela-carta{
+  position:absolute;
+  inset:90px 12px 12px;
+  z-index:16;
+  display:none;
+  grid-template-rows:auto 1fr auto;
+  border-radius:18px;
+  border:4px solid #204678;
+  background:linear-gradient(180deg,#0f2244 0,#0d1a34 100%);
+  box-shadow:0 24px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.16);
+  overflow:hidden;
+}
+.tela-carta.aberta{
+  display:grid;
+  animation:subir-carta .22s ease;
+}
+@keyframes subir-carta{
+  from{opacity:0;transform:translateY(8px) scale(.99)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.carta-cabecalho{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:12px 14px;
+  border-bottom:1px solid rgba(124,168,240,.35);
+  background:linear-gradient(180deg,rgba(255,255,255,.15) 0,rgba(255,255,255,.04) 100%);
+}
+.carta-cabecalho h3{
+  margin:0;
+  color:#eaf2ff;
+  font-family:"Press Start 2P",monospace;
+  font-size:12px;
+  letter-spacing:.7px;
+}
+.botao-fechar-carta{
+  border:2px solid rgba(255,255,255,.4);
+  border-radius:10px;
+  background:linear-gradient(180deg,#4da1ff 0,#1d66cf 100%);
+  color:#f2f7ff;
+  padding:8px 12px;
+  font-size:13px;
+  font-weight:700;
+}
+.carta-palco{
+  min-height:0;
+  display:grid;
+  place-items:center;
+  padding:14px;
+  perspective:1800px;
+  -webkit-perspective:1800px;
+  overflow:auto;
+}
+.carta-palco.soltar-ativo{
+  background:radial-gradient(circle at 50% 50%,rgba(102,162,255,.22) 0,rgba(102,162,255,0) 65%);
+  box-shadow:inset 0 0 0 2px rgba(132,188,255,.5);
+}
+.carta3d{
+  width:min(380px,92%);
+  aspect-ratio:0.72;
+  position:relative;
+  transform-style:preserve-3d;
+  -webkit-transform-style:preserve-3d;
+  transition:transform .75s cubic-bezier(.2,.78,.18,1);
+  transform-origin:center;
+  will-change:transform;
+}
+.carta3d:not(.girada):hover{
+  transform:rotateY(-10deg) rotateX(4deg);
+}
+.carta3d.girada{
+  transform:rotateX(2deg);
+}
+.carta3d.girada:hover{
+  transform:rotateX(0deg) scale(1.01);
+}
+.face-carta{
+  position:absolute;
+  inset:0;
+  border-radius:18px;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  transform-style:preserve-3d;
+  -webkit-transform-style:preserve-3d;
+  overflow:hidden;
+  border:2px solid rgba(166,204,255,.45);
+  box-shadow:0 20px 40px rgba(0,0,0,.45);
+  transition:transform .75s cubic-bezier(.2,.78,.18,1), opacity .28s ease;
+}
+.face-frente{
+  transform:rotateY(0deg) translateZ(1px);
+  opacity:1;
+  background:linear-gradient(180deg,#1b3a6d 0,#17315d 45%,#12284e 100%);
+  padding:12px;
+  display:grid;
+  gap:8px;
+  align-content:start;
+  color:#e6f0ff;
+  position:relative;
+  z-index:1;
+}
+.face-frente > *{
+  position:relative;
+  z-index:2;
+}
+.face-frente::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:
+    linear-gradient(120deg,rgba(255,255,255,.36) 0,rgba(255,255,255,.08) 25%,rgba(255,255,255,0) 45%),
+    radial-gradient(circle at 20% 20%,rgba(121,197,255,.22) 0,rgba(121,197,255,0) 40%);
+  mix-blend-mode:screen;
+  animation:brilho-carta 2.6s ease-in-out infinite;
+}
+@keyframes brilho-carta{
+  0%{opacity:.4}
+  50%{opacity:.92}
+  100%{opacity:.4}
+}
+.face-verso{
+  transform:rotateY(180deg) translateZ(.1px);
+  opacity:0;
+  background:#0e2347;
+  display:grid;
+  place-items:center;
+}
+.carta3d.girada .face-frente{
+  transform:rotateY(-180deg) translateZ(1px);
+  opacity:0;
+}
+.carta3d.girada .face-verso{
+  transform:rotateY(0deg) translateZ(1px);
+  opacity:1;
+}
+.face-verso img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+.carta-frente-topo{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  font-size:18px;
+  font-weight:700;
+}
+.carta-frente-topo .id{
+  color:#9cc9ff;
+  font-size:15px;
+}
+.imagem-carta{
+  width:100%;
+  max-width:260px;
+  justify-self:center;
+  aspect-ratio:1/1;
+  object-fit:contain;
+  border-radius:12px;
+  border:2px solid #335f97;
+  background:radial-gradient(circle at 50% 32%,rgba(255,255,255,.22) 0,rgba(255,255,255,0) 62%),#102648;
+  padding:10px;
+}
+.acoes-carta{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px 12px;
+  border-top:1px solid rgba(124,168,240,.32);
+  background:linear-gradient(180deg,rgba(255,255,255,.08) 0,rgba(255,255,255,.02) 100%);
+}
+.botao-girar-carta{
+  border:2px solid rgba(255,255,255,.4);
+  border-radius:10px;
+  background:linear-gradient(180deg,#4da1ff 0,#1d66cf 100%);
+  color:#f2f7ff;
+  padding:10px 14px;
+  font-size:15px;
+  font-weight:700;
+}
