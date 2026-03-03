@@ -1,0 +1,269 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1080" viewBox="0 0 1800 1080" role="img" aria-label="Diagrama do fluxo Selenium no projeto pokedex-ranking-data">
+  <defs>
+    <linearGradient id="fundoA" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f1d36"/>
+      <stop offset="1" stop-color="#060d1d"/>
+    </linearGradient>
+    <radialGradient id="haloAzul" cx="20%" cy="22%" r="60%">
+      <stop offset="0" stop-color="#3ea2ff" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#3ea2ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloVermelho" cx="82%" cy="80%" r="64%">
+      <stop offset="0" stop-color="#ff476e" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#ff476e" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="corpoDex" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff4f55"/>
+      <stop offset="0.58" stop-color="#d1153a"/>
+      <stop offset="1" stop-color="#8e0824"/>
+    </linearGradient>
+    <linearGradient id="cabecalhoTela" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#bbffe2"/>
+      <stop offset="1" stop-color="#74f4c0"/>
+    </linearGradient>
+    <linearGradient id="blocoAzul" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a8cff"/>
+      <stop offset="1" stop-color="#145fcb"/>
+    </linearGradient>
+    <linearGradient id="blocoEscuro" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1e2f56"/>
+      <stop offset="1" stop-color="#131f3d"/>
+    </linearGradient>
+    <linearGradient id="blocoVerde" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#46d39c"/>
+      <stop offset="1" stop-color="#269464"/>
+    </linearGradient>
+    <linearGradient id="blocoRoxo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6e7cff"/>
+      <stop offset="1" stop-color="#4258d6"/>
+    </linearGradient>
+    <linearGradient id="blocoDourado" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd975"/>
+      <stop offset="1" stop-color="#d9a622"/>
+    </linearGradient>
+    <linearGradient id="lente" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#dff7ff"/>
+      <stop offset="0.46" stop-color="#39beff"/>
+      <stop offset="1" stop-color="#0a4f84"/>
+    </linearGradient>
+    <filter id="sombra" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#000" flood-opacity="0.33"/>
+    </filter>
+    <filter id="brilho" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#7cc7ff" flood-opacity="0.5"/>
+    </filter>
+    <marker id="seta" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M1 1 L11 6 L1 11 Z" fill="#a9d4ff"/>
+    </marker>
+    <marker id="setaVerde" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M1 1 L11 6 L1 11 Z" fill="#83f5c1"/>
+    </marker>
+    <style>
+      .titulo {
+        font-family: "Press Start 2P","VT323","Trebuchet MS",monospace;
+        font-size: 26px;
+        fill: #090d12;
+        letter-spacing: 1px;
+      }
+      .tituloSub {
+        font-family: "Rajdhani","Trebuchet MS",sans-serif;
+        font-size: 17px;
+        fill: #0a271a;
+        letter-spacing: 0.6px;
+        font-weight: 800;
+      }
+      .subtitulo {
+        font-family: "Rajdhani","Trebuchet MS",sans-serif;
+        font-size: 20px;
+        fill: #d6e8ff;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+      }
+      .blocoTitulo {
+        font-family: "Rajdhani","Trebuchet MS",sans-serif;
+        font-size: 23px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        fill: #f4f9ff;
+      }
+      .blocoTituloMedio {
+        font-family: "Rajdhani","Trebuchet MS",sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 0.7px;
+        fill: #f4f9ff;
+      }
+      .blocoTexto {
+        font-family: "Rajdhani","Trebuchet MS",sans-serif;
+        font-size: 18px;
+        fill: #deebff;
+        letter-spacing: 0.3px;
+        font-weight: 600;
+      }
+      .blocoTextoMenor {
+        font-family: "Rajdhani","Trebuchet MS",sans-serif;
+        font-size: 16px;
+        fill: #deebff;
+        letter-spacing: 0.2px;
+        font-weight: 600;
+      }
+      .blocoTextoEscuro {
+        font-family: "Rajdhani","Trebuchet MS",sans-serif;
+        font-size: 18px;
+        fill: #08281d;
+        letter-spacing: 0.3px;
+        font-weight: 700;
+      }
+      .blocoTextoEscuroMenor {
+        font-family: "Rajdhani","Trebuchet MS",sans-serif;
+        font-size: 15px;
+        fill: #08281d;
+        letter-spacing: 0.2px;
+        font-weight: 700;
+      }
+      .micro {
+        font-family: "Rajdhani","Trebuchet MS",sans-serif;
+        font-size: 17px;
+        fill: #c8dcff;
+        letter-spacing: 0.2px;
+        font-weight: 600;
+      }
+      .seta {
+        fill: none;
+        stroke: #a9d4ff;
+        stroke-width: 5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        marker-end: url(#seta);
+      }
+      .setaSec {
+        fill: none;
+        stroke: #83f5c1;
+        stroke-width: 4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        marker-end: url(#setaVerde);
+      }
+    </style>
+  </defs>
+
+  <rect x="40" y="40" width="1720" height="1000" rx="44" fill="url(#corpoDex)" stroke="#670016" stroke-width="12" filter="url(#sombra)"/>
+  <path d="M95 84 H1320 Q1390 84 1435 130 L1675 370 Q1710 405 1710 464 V964 Q1710 1000 1670 1000 H95 Q70 1000 70 970 V120 Q70 84 95 84 Z" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="8"/>
+
+  <circle cx="150" cy="140" r="54" fill="url(#lente)" stroke="#0c3b61" stroke-width="10"/>
+  <circle cx="132" cy="120" r="14" fill="#ecfbff" opacity="0.85"/>
+  <circle cx="240" cy="112" r="18" fill="#ffe45d" stroke="#7d5d00" stroke-width="6">
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="1.4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="286" cy="112" r="18" fill="#56ffa2" stroke="#106c38" stroke-width="6">
+    <animate attributeName="opacity" values="1;0.35;1" dur="1.7s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="332" cy="112" r="18" fill="#ff6f8d" stroke="#7f0020" stroke-width="6">
+    <animate attributeName="opacity" values="0.65;1;0.65" dur="1.2s" repeatCount="indefinite"/>
+  </circle>
+
+  <rect x="420" y="96" width="1080" height="72" rx="24" fill="url(#cabecalhoTela)" stroke="#0f6d3f" stroke-width="7"/>
+  <text x="960" y="132" text-anchor="middle" class="titulo">FLUXO DO SELENIUM - POKEDEX RANKING DATA</text>
+  <text x="960" y="156" text-anchor="middle" class="tituloSub">AUTOMAÇÃO DE COLETA, RANKING E EXPORTAÇÃO</text>
+
+  <rect x="100" y="230" width="360" height="170" rx="22" fill="url(#blocoEscuro)" stroke="#6ea2ff" stroke-width="4" filter="url(#sombra)"/>
+  <text x="126" y="274" class="blocoTitulo">Interface Web</text>
+  <text x="126" y="310" class="blocoTexto">Iniciar, parar e continuar coleta</text>
+  <text x="126" y="338" class="blocoTexto">Acompanha logs, ranking e cards</text>
+  <text x="126" y="366" class="blocoTexto">Tela de configuração do Selenium</text>
+
+  <rect x="520" y="230" width="320" height="170" rx="22" fill="url(#blocoAzul)" stroke="#9ed0ff" stroke-width="4" filter="url(#sombra)"/>
+  <text x="546" y="274" class="blocoTitulo">API Flask</text>
+  <text x="546" y="310" class="blocoTexto">POST /iniciar inicia a coleta</text>
+  <text x="546" y="338" class="blocoTexto">GET /estado devolve o progresso</text>
+  <text x="546" y="366" class="blocoTexto">POST /configuração atualiza</text>
+  <text x="546" y="390" class="blocoTextoMenor">navegador, modo e tempo</text>
+
+  <rect x="880" y="190" width="580" height="560" rx="30" fill="#102146" stroke="#84beff" stroke-width="6" filter="url(#sombra)"/>
+  <rect x="900" y="210" width="540" height="72" rx="16" fill="url(#blocoAzul)" stroke="#afdbff" stroke-width="3" filter="url(#brilho)"/>
+  <text x="1170" y="256" text-anchor="middle" class="blocoTitulo">NÚCLEO SELENIUM</text>
+
+  <rect x="920" y="300" width="500" height="86" rx="16" fill="#1a2e57" stroke="#82aee8" stroke-width="3"/>
+  <text x="946" y="334" class="blocoTexto">1) Escolhe o navegador salvo na configuração</text>
+  <text x="946" y="362" class="micro">chrome, edge ou firefox</text>
+  <path d="M1170 386 L1170 402" class="setaSec"/>
+
+  <rect x="920" y="402" width="500" height="86" rx="16" fill="#1a2e57" stroke="#82aee8" stroke-width="3"/>
+  <text x="946" y="436" class="blocoTexto">2) Abre WebDriver com timeout e janela</text>
+  <text x="946" y="464" class="micro">modo visual ou headless</text>
+  <path d="M1170 488 L1170 504" class="setaSec"/>
+
+  <rect x="920" y="504" width="500" height="86" rx="16" fill="#1a2e57" stroke="#82aee8" stroke-width="3"/>
+  <text x="946" y="538" class="blocoTexto">3) Navega URLs da PokéAPI por índice</text>
+  <text x="946" y="566" class="micro">pokemon, species e evolution-chain</text>
+  <path d="M1170 590 L1170 606" class="setaSec"/>
+
+  <rect x="920" y="606" width="500" height="86" rx="16" fill="#1a2e57" stroke="#82aee8" stroke-width="3"/>
+  <text x="946" y="640" class="blocoTexto">4) Extrai tipos, atributos, imagem e evoluções</text>
+  <text x="946" y="668" class="micro">normaliza os dados para o dashboard</text>
+
+  <rect x="1470" y="230" width="260" height="250" rx="22" fill="url(#blocoVerde)" stroke="#c5ffea" stroke-width="4" filter="url(#sombra)"/>
+  <text x="1600" y="272" text-anchor="middle" class="blocoTextoEscuro">Fonte principal</text>
+  <text x="1600" y="308" text-anchor="middle" class="blocoTituloMedio" fill="#083726">PokeAPI</text>
+  <text x="1494" y="344" class="blocoTextoEscuroMenor">/api/v2/pokemon/{id}</text>
+  <text x="1494" y="368" class="blocoTextoEscuroMenor">/api/v2/pokemon-species/</text>
+  <text x="1494" y="390" class="blocoTextoEscuroMenor">{id}</text>
+  <text x="1494" y="414" class="blocoTextoEscuroMenor">/api/v2/evolution-chain/</text>
+  <text x="1494" y="436" class="blocoTextoEscuroMenor">{id}</text>
+  <text x="1494" y="462" class="blocoTextoEscuroMenor">retorno em JSON</text>
+
+  <rect x="1470" y="510" width="260" height="170" rx="22" fill="url(#blocoRoxo)" stroke="#cfd8ff" stroke-width="4" filter="url(#sombra)"/>
+  <text x="1600" y="552" text-anchor="middle" class="blocoTituloMedio">Bulbapedia</text>
+  <text x="1494" y="586" class="blocoTextoMenor">fonte opcional para</text>
+  <text x="1494" y="612" class="blocoTextoMenor">consulta complementar</text>
+  <text x="1494" y="638" class="blocoTextoMenor">quando necessário</text>
+
+  <rect x="520" y="680" width="320" height="170" rx="22" fill="url(#blocoEscuro)" stroke="#7ab0ff" stroke-width="4" filter="url(#sombra)"/>
+  <text x="546" y="724" class="blocoTitulo">Estado em memória</text>
+  <text x="546" y="760" class="blocoTexto">progresso atual e total</text>
+  <text x="546" y="788" class="blocoTexto">logs do navegador e erros</text>
+  <text x="546" y="816" class="blocoTexto">lista coletada e top 10</text>
+
+  <rect x="100" y="680" width="360" height="170" rx="22" fill="url(#blocoAzul)" stroke="#c1ddff" stroke-width="4" filter="url(#sombra)"/>
+  <text x="126" y="724" class="blocoTituloMedio">Atualização da tela</text>
+  <text x="126" y="760" class="blocoTexto">Dashboard consulta GET /estado</text>
+  <text x="126" y="788" class="blocoTexto">Mostra cards e ranking</text>
+  <text x="126" y="812" class="blocoTexto">em tempo real</text>
+  <text x="126" y="836" class="blocoTexto">Exibe pop-up quando ocorre erro</text>
+
+  <rect x="880" y="780" width="840" height="170" rx="24" fill="url(#blocoDourado)" stroke="#ffe9b0" stroke-width="4" filter="url(#sombra)"/>
+  <text x="910" y="824" class="blocoTextoEscuro">Saída final</text>
+  <text x="910" y="860" class="blocoTitulo" fill="#6a4300">dados/pokedex.json</text>
+  <text x="910" y="892" class="blocoTextoEscuro">Pokémon coletados e Top 10 mais fortes</text>
+  <text x="910" y="920" class="blocoTextoEscuro">Exportação em JSON pelo botão de download</text>
+
+  <path d="M460 315 L520 315" class="seta"/>
+  <path d="M840 315 L880 315" class="seta"/>
+  <path d="M1460 344 L1470 344" class="seta"/>
+  <path d="M1460 590 L1470 590" class="setaSec"/>
+  <path d="M1170 750 L1170 780" class="seta"/>
+  <path d="M980 750 C930 790 900 810 840 830" class="seta"/>
+  <path d="M520 765 L460 765" class="seta"/>
+  <path d="M680 400 L680 680" class="setaSec"/>
+  <path d="M280 680 L280 400" class="setaSec"/>
+
+  <g transform="translate(1660 96)">
+    <circle cx="0" cy="0" r="48" fill="#f7f7f7" stroke="#111" stroke-width="8"/>
+    <path d="M-48 0 A48 48 0 0 1 48 0" fill="#f52240" stroke="#111" stroke-width="8"/>
+    <rect x="-48" y="-6" width="96" height="12" fill="#111"/>
+    <circle cx="0" cy="0" r="15" fill="#fff" stroke="#111" stroke-width="7"/>
+    <circle cx="-5" cy="-4" r="4" fill="#dbf4ff"/>
+    <circle cx="0" cy="0" r="15" fill="none" stroke="#fff" stroke-width="3" opacity="0.0">
+      <animate attributeName="r" values="15;28;15" dur="1.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.45;0" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <rect x="80" y="878" width="740" height="140" rx="18" fill="#101f3f" stroke="#789fe0" stroke-width="3"/>
+  <text x="110" y="916" class="subtitulo">Ponto-chave</text>
+  <text x="110" y="946" class="blocoTextoMenor">Selenium controla navegador, timeout e navegação nos endpoints da PokéAPI.</text>
+  <text x="110" y="972" class="blocoTextoMenor">Depois normaliza os dados para estado, dashboard, ranking</text>
+  <text x="110" y="998" class="blocoTextoMenor">e exportação JSON.</text>
+</svg>
+
+

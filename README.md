@@ -104,6 +104,8 @@ pokedex-ranking-data/
 6. Frontend renderiza progresso, ranking, logs e cards em tempo real.
 7. Ao finalizar, backend grava `dados/pokedex.json`.
 
+![Diagrama do fluxo Selenium](assets/diagrama_selenium.svg)
+
 ## API local
 
 ### `GET /`
