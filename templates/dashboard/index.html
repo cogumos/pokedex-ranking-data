@@ -35,6 +35,7 @@
         <p>coleta automática com Selenium e ranking Pokémon</p>
       </div>
       <div class="acoes-topo">
+        <button id="botao-estrategia-topo" class="config-topo">Estratégia</button>
         <button id="botao-config-topo" class="config-topo">Configuração</button>
       </div>
     </header>
@@ -50,7 +51,7 @@
             </select>
             <div id="campo-quantidade" class="campo-quantidade">
               <label for="quantidade">Quantidade de Pokémon</label>
-              <input id="quantidade" type="number" min="1" max="2000" value="151" inputmode="numeric" pattern="[0-9]*">
+              <input id="quantidade" type="number" min="0" max="2000" value="0" inputmode="numeric" pattern="[0-9]*">
             </div>
             <div class="botoes">
               <button id="botao-iniciar" class="iniciar">Iniciar coleta</button>
@@ -129,6 +130,91 @@
         </div>
       </div>
     </section>
+    <section class="tela-estrategia" id="tela-estrategia">
+      <div class="estrategia-cabecalho">
+        <div class="estrategia-cabecalho-info">
+          <span class="estrategia-selo-topo">Battle Lab</span>
+          <div>
+            <h3>TELA DE ESTRATÉGIA DE ATAQUES</h3>
+            <p>Monte, teste e ajuste o seu time como um menu tático de batalha.</p>
+          </div>
+        </div>
+        <div class="estrategia-cabecalho-acoes">
+          <div class="estrategia-leds-topo" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <button id="botao-fechar-estrategia" class="botao-voltar-estrategia">Voltar</button>
+        </div>
+      </div>
+      <div class="estrategia-conteudo">
+        <div class="estrategia-grid">
+          <div class="estrategia-controles">
+            <div class="estrategia-painel-topo">
+              <span class="estrategia-selo-topo estrategia-selo-topo-ouro">Trainer Console</span>
+              <strong>Monte o lineup ofensivo</strong>
+            </div>
+            <label for="tipo-alvo-primario">Tipo alvo principal</label>
+            <select id="tipo-alvo-primario"></select>
+            <label for="tipo-alvo-secundario">Tipo alvo secundário</label>
+            <select id="tipo-alvo-secundario"></select>
+            <label for="estilo-estrategia">Estilo do plano</label>
+            <select id="estilo-estrategia">
+              {% for chave, nome in estilos_estrategia_disponiveis.items() %}
+              <option value="{{ chave }}">{{ nome }}</option>
+              {% endfor %}
+            </select>
+            <label for="tamanho-time-estrategia">Tamanho do time</label>
+            <select id="tamanho-time-estrategia">
+              <option value="3">3 slots</option>
+              <option value="4">4 slots</option>
+              <option value="5">5 slots</option>
+              <option value="6">6 slots</option>
+            </select>
+            <div class="estrategia-bloco-titulo">
+              <span>Prioridade manual</span>
+              <strong>Escolha seus favoritos</strong>
+            </div>
+            <label for="busca-capturados-estrategia">Priorize capturados</label>
+            <input id="busca-capturados-estrategia" class="campo-busca-estrategia" type="text" placeholder="Buscar por nome ou id">
+            <p class="ajuda-estrategia">Selecione seus capturados favoritos para forcar o motor em Python + Selenium a testar variacoes com eles.</p>
+            <div class="resumo-prioridades">
+              <span id="contador-prioridades-estrategia">0 priorizados</span>
+              <span id="contador-capturados-estrategia">0 disponíveis</span>
+            </div>
+            <div class="estrategia-bloco-titulo">
+              <span>Seu squad</span>
+              <strong>Prioridades fixadas</strong>
+            </div>
+            <div id="selecionados-estrategia" class="selecionados-estrategia">
+              <div class="selecionados-vazio">Os Pokémon que você marcar aparecem aqui.</div>
+            </div>
+            <div class="estrategia-bloco-titulo">
+              <span>Banco de capturados</span>
+              <strong>Escolha para o teste</strong>
+            </div>
+            <div id="lista-capturados-estrategia" class="lista-capturados-estrategia">
+              <div class="vazio-capturados-estrategia">Colete Pokémon para selecionar prioridades visuais.</div>
+            </div>
+            <div class="acoes-estrategia">
+              <button id="botao-gerar-estrategia" class="botao-estrategia">Montar estratégia</button>
+              <button id="botao-testar-estrategia" class="botao-teste-estrategia">Rodar teste tático</button>
+            </div>
+            <div id="status-estrategia" class="status-estrategia">Colete Pokémon e monte um plano ofensivo baseado nos capturados.</div>
+          </div>
+          <div id="painel-estrategia" class="painel-estrategia">
+            <div class="vazio-estrategia">
+              <div class="vazio-estrategia-painel">
+                <span class="estrategia-selo-vazio">Battle Screen</span>
+                <strong>Aguardando estratégia</strong>
+                <p>A estratégia aparece aqui com o time recomendado, golpes sugeridos, cobertura e riscos.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
     <section class="tela-carta" id="tela-carta">
       <div class="carta-cabecalho">
         <h3>CARTA 3D DO POKÉMON</h3>
@@ -175,12 +261,15 @@
       versaoProjeto: {{ versao_projeto | tojson }},
       criadorProjeto: {{ criador_projeto | tojson }},
       githubCriador: {{ github_criador | tojson }},
-      navegadoresDisponiveis: {{ navegadores_disponiveis | tojson }}
+      navegadoresDisponiveis: {{ navegadores_disponiveis | tojson }},
+      tiposPokemonDisponiveis: {{ tipos_pokemon_disponiveis | tojson }},
+      estilosEstrategiaDisponiveis: {{ estilos_estrategia_disponiveis | tojson }}
     };
   </script>
   <script src="{{ url_for('static', filename='js/dashboard/estado.js') }}"></script>
   <script src="{{ url_for('static', filename='js/card/carta_3d.js') }}"></script>
   <script src="{{ url_for('static', filename='js/configuracao/configuracao.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/dashboard/estrategia.js') }}"></script>
   <script src="{{ url_for('static', filename='js/dashboard/dashboard.js') }}"></script>
 </body>
 </html>

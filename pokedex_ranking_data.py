@@ -12,9 +12,18 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
+from analise_tatica import (
+    AnaliseTatica,
+    criar_estrategia_vazia,
+    estilos_estrategia_disponiveis,
+    normalizar_estilo_estrategia,
+    normalizar_tipo,
+    serializar_pokemon_publico,
+    tipos_pokemon_disponiveis,
+)
 
 nome_projeto = "pokedex-ranking-data"
-versao_projeto = "2.0.0"
+versao_projeto = "3.0.0"
 criador_projeto = "Cogumos"
 github_criador = "https://github.com/cogumos"
 navegadores_disponiveis = {
@@ -34,6 +43,7 @@ estado = {
     "pokemons": [],
     "acumulado": [],
     "ranking": [],
+    "estrategia": criar_estrategia_vazia(),
     "erro": "",
     "progresso": {"atual": 0, "total": 0},
     "modo": "quantidade",
@@ -69,6 +79,7 @@ def iniciar_estado(quantidade, modo):
         estado["pokemons"] = []
         estado["acumulado"] = []
         estado["ranking"] = []
+        estado["estrategia"] = criar_estrategia_vazia()
         estado["erro"] = ""
         estado["progresso"] = {"atual": 0, "total": quantidade}
         estado["modo"] = modo
@@ -84,6 +95,7 @@ def limpar_estado():
         estado["pokemons"] = []
         estado["acumulado"] = []
         estado["ranking"] = []
+        estado["estrategia"] = criar_estrategia_vazia()
         estado["erro"] = ""
         estado["progresso"] = {"atual": 0, "total": 0}
         estado["modo"] = "quantidade"
@@ -99,6 +111,7 @@ def preparar_retomada():
         estado["em_execucao"] = True
         estado["pausado"] = False
         estado["parar_solicitado"] = False
+        estado["estrategia"] = criar_estrategia_vazia()
         estado["erro"] = ""
 
 
@@ -175,6 +188,9 @@ def capturar_json_da_pagina(navegador, url, timeout_segundos):
         erros.append(f"body: {formatar_erro_curto(erro_body)}")
     mensagem_erro = " | ".join(erros[:3]) if erros else "não foi possível extrair o JSON"
     raise RuntimeError(mensagem_erro)
+
+
+analise_tatica = AnaliseTatica(capturar_json_da_pagina)
 
 
 def obter_total_pokemon(navegador, timeout_segundos):
@@ -257,8 +273,8 @@ def salvar_json(pokemons, ranking, modo):
         "versao": versao_projeto,
         "modo": modo,
         "quantidade": len(pokemons),
-        "pokemons": pokemons,
-        "top10_mais_fortes": ranking,
+        "pokemons": [serializar_pokemon_publico(pokemon) for pokemon in pokemons],
+        "top10_mais_fortes": [serializar_pokemon_publico(pokemon) for pokemon in ranking],
     }
     with open(caminho, "w", encoding="utf-8") as arquivo:
         json.dump(pacote, arquivo, ensure_ascii=False, indent=2)
@@ -322,6 +338,7 @@ def executar_coleta(quantidade, modo, retomar=False):
                     estado["parar_solicitado"] = False
                     estado["progresso"]["atual"] = indice - 1
                     estado["acumulado"] = pokemons
+                    estado["estrategia"] = criar_estrategia_vazia()
                     if modo == "mais_forte":
                         estado["pokemons"] = sorted(pokemons, key=lambda item: item["total_stats"], reverse=True)[:10]
                     else:
@@ -333,16 +350,6 @@ def executar_coleta(quantidade, modo, retomar=False):
                 registrar_log(f"Abrindo {url_pokemon}")
                 dados_pokemon = capturar_json_da_pagina(navegador, url_pokemon, timeout_segundos)
 
-                stats = {item["stat"]["name"]: item["base_stat"] for item in dados_pokemon["stats"]}
-                total_stats = sum(stats.values())
-                tipos = [item["type"]["name"] for item in dados_pokemon["types"]]
-                imagem = (
-                    dados_pokemon.get("sprites", {})
-                    .get("other", {})
-                    .get("official-artwork", {})
-                    .get("front_default")
-                    or dados_pokemon.get("sprites", {}).get("front_default")
-                )
                 evolucoes = []
                 if modo == "quantidade":
                     url_especie = dados_pokemon["species"]["url"]
@@ -353,26 +360,21 @@ def executar_coleta(quantidade, modo, retomar=False):
                     registrar_log(f"Abrindo {url_evolucao}")
                     dados_evolucao = capturar_json_da_pagina(navegador, url_evolucao, timeout_segundos)
                     evolucoes = list(dict.fromkeys(coletar_evolucoes(dados_evolucao["chain"])))
-                pokemon = {
-                    "id": dados_pokemon["id"],
-                    "nome": dados_pokemon["name"],
-                    "tipos": tipos,
-                    "stats": stats,
-                    "total_stats": total_stats,
-                    "evolucoes": evolucoes,
-                    "imagem": imagem,
-                }
+                pokemon = analise_tatica.criar_resumo_pokemon(dados_pokemon, evolucoes, navegador, timeout_segundos)
                 pokemons.append(pokemon)
                 ranking_parcial = sorted(pokemons, key=lambda item: item["total_stats"], reverse=True)[:10]
                 with trava_estado:
                     estado["ranking"] = ranking_parcial
                     estado["progresso"]["atual"] = indice
                     estado["acumulado"] = pokemons
+                    estado["estrategia"] = criar_estrategia_vazia()
                     if modo == "mais_forte":
                         estado["pokemons"] = ranking_parcial
                     else:
                         estado["pokemons"] = pokemons
-                registrar_log(f"{indice}/{total_alvo} coletado: {pokemon['nome']} total {pokemon['total_stats']}")
+                registrar_log(
+                    f"{indice}/{total_alvo} coletado: {pokemon['nome']} total {pokemon['total_stats']} | papel {pokemon['papel_tatico']}"
+                )
                 if intervalo_ms > 0:
                     time.sleep(intervalo_ms / 1000.0)
             except Exception as erro_item:
@@ -388,6 +390,7 @@ def executar_coleta(quantidade, modo, retomar=False):
             estado["pausado"] = False
             estado["resumivel"] = False
             estado["parar_solicitado"] = False
+            estado["estrategia"] = criar_estrategia_vazia()
             if modo == "mais_forte":
                 estado["pokemons"] = ranking
                 pokemons_para_saida = ranking
@@ -409,6 +412,48 @@ def executar_coleta(quantidade, modo, retomar=False):
                 pass
 
 
+def aplicar_enriquecimento_estrategico(time_estrategico):
+    por_id = {
+        int(item["id"]): {
+            "golpes_recomendados": item.get("golpes_recomendados") or [],
+            "score_estrategia": item.get("score_estrategia"),
+        }
+        for item in time_estrategico
+    }
+
+    def atualizar_lista(lista):
+        for pokemon in lista:
+            dados_extra = por_id.get(int(pokemon.get("id") or 0))
+            if not dados_extra:
+                continue
+            pokemon["golpes_recomendados"] = json.loads(json.dumps(dados_extra["golpes_recomendados"], ensure_ascii=False))
+            pokemon["score_estrategia"] = dados_extra["score_estrategia"]
+
+    with trava_estado:
+        atualizar_lista(estado["acumulado"])
+        atualizar_lista(estado["pokemons"])
+        atualizar_lista(estado["ranking"])
+
+
+def obter_estado_publico():
+    with trava_estado:
+        publico = {
+            "em_execucao": bool(estado["em_execucao"]),
+            "pausado": bool(estado["pausado"]),
+            "resumivel": bool(estado["resumivel"]),
+            "parar_solicitado": bool(estado["parar_solicitado"]),
+            "logs": list(estado["logs"]),
+            "pokemons": [serializar_pokemon_publico(item) for item in estado["pokemons"]],
+            "ranking": [serializar_pokemon_publico(item) for item in estado["ranking"]],
+            "estrategia": json.loads(json.dumps(estado.get("estrategia") or criar_estrategia_vazia(), ensure_ascii=False)),
+            "erro": estado["erro"],
+            "progresso": json.loads(json.dumps(estado["progresso"], ensure_ascii=False)),
+            "modo": estado["modo"],
+            "configuracao": json.loads(json.dumps(estado["configuracao"], ensure_ascii=False)),
+        }
+    return publico
+
+
 @aplicacao.route("/")
 def pagina_inicial():
     return render_template(
@@ -418,7 +463,91 @@ def pagina_inicial():
         criador_projeto=criador_projeto,
         github_criador=github_criador,
         navegadores_disponiveis=navegadores_disponiveis,
+        tipos_pokemon_disponiveis=tipos_pokemon_disponiveis,
+        estilos_estrategia_disponiveis=estilos_estrategia_disponiveis,
     )
+
+
+@aplicacao.route("/estrategia", methods=["POST"])
+def gerar_estrategia():
+    corpo = request.get_json(silent=True) or {}
+    tipo_alvo_primario = normalizar_tipo(corpo.get("tipo_alvo_primario"))
+    tipo_alvo_secundario = normalizar_tipo(corpo.get("tipo_alvo_secundario"))
+    estilo = normalizar_estilo_estrategia(corpo.get("estilo"))
+    ids_prioritarios = corpo.get("ids_prioritarios") or []
+    try:
+        tamanho_time = int(corpo.get("tamanho_time", 3))
+    except (TypeError, ValueError):
+        tamanho_time = 3
+    tamanho_time = max(3, min(6, tamanho_time))
+
+    with trava_estado:
+        pokemons_base = list(estado.get("acumulado") or estado.get("pokemons") or [])
+        configuracao = dict(estado.get("configuracao") or {})
+        em_execucao = bool(estado.get("em_execucao"))
+    if not pokemons_base:
+        return jsonify({"ok": False, "mensagem": "Colete Pokémon antes de montar a estratégia."})
+
+    navegador = None
+    try:
+        timeout_segundos = max(5, min(60, int(configuracao.get("timeout_segundos", 25))))
+        registrar_log(
+            f"Montando estratégia ({estilo}) com {len(pokemons_base)} capturados"
+            + (" durante a coleta" if em_execucao else "")
+        )
+        registrar_log("Abrindo laboratório tático com Python + Selenium")
+        navegador = criar_navegador(configuracao, registrar=False)
+        estrategia = analise_tatica.gerar_estrategia(
+            pokemons_base,
+            tipo_alvo_primario,
+            tipo_alvo_secundario,
+            estilo,
+            tamanho_time,
+            navegador,
+            timeout_segundos,
+            ids_prioritarios=ids_prioritarios,
+        )
+        aplicar_enriquecimento_estrategico(estrategia.get("time") or [])
+        with trava_estado:
+            estado["estrategia"] = estrategia
+            estado["erro"] = ""
+        registrar_log("Estratégia ofensiva gerada com sucesso")
+        return jsonify({"ok": True, "mensagem": "Estratégia gerada.", "estrategia": estrategia})
+    except Exception as erro:
+        erro_curto = formatar_erro_curto(erro)
+        with trava_estado:
+            estado["erro"] = erro_curto
+        registrar_log(f"Falha ao gerar estratégia: {erro_curto}")
+        return jsonify({"ok": False, "mensagem": f"Não foi possível gerar a estratégia: {erro_curto}"})
+    finally:
+        if navegador:
+            try:
+                navegador.quit()
+                registrar_log("Laboratório tático do Selenium encerrado")
+            except Exception:
+                pass
+
+
+@aplicacao.route("/estrategia/testar", methods=["POST"])
+def testar_estrategia():
+    with trava_estado:
+        estrategia_atual = json.loads(json.dumps(estado.get("estrategia") or criar_estrategia_vazia(), ensure_ascii=False))
+    if not (estrategia_atual.get("time") or []):
+        return jsonify({"ok": False, "mensagem": "Gere uma estratégia antes de rodar o teste tático."})
+    try:
+        teste = analise_tatica.testar_estrategia(estrategia_atual)
+        with trava_estado:
+            estado["estrategia"]["teste"] = teste
+            estado["erro"] = ""
+            estrategia_atual = json.loads(json.dumps(estado["estrategia"], ensure_ascii=False))
+        registrar_log(f"Teste tático concluído com valor {teste['valor_estrategia']}/100")
+        return jsonify({"ok": True, "mensagem": "Teste tático concluído.", "teste": teste, "estrategia": estrategia_atual})
+    except Exception as erro:
+        erro_curto = formatar_erro_curto(erro)
+        with trava_estado:
+            estado["erro"] = erro_curto
+        registrar_log(f"Falha ao testar estratégia: {erro_curto}")
+        return jsonify({"ok": False, "mensagem": f"Não foi possível rodar o teste: {erro_curto}"})
 
 @aplicacao.route("/iniciar", methods=["POST"])
 def iniciar():
@@ -566,9 +695,7 @@ def apagar():
 
 @aplicacao.route("/estado")
 def ler_estado():
-    with trava_estado:
-        copia = json.loads(json.dumps(estado, ensure_ascii=False))
-    return jsonify(copia)
+    return jsonify(obter_estado_publico())
 
 
 def abrir_interface():

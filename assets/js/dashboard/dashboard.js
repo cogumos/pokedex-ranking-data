@@ -2,6 +2,7 @@
   const base = window.pokedexEstado;
   const carta = window.pokedexCarta;
   const configuracao = window.pokedexConfiguracao;
+  const estrategia = window.pokedexEstrategia;
   const e = base.elementos;
   const estadoTela = base.estadoTela;
   let ultimoErroPopup = "";
@@ -76,7 +77,8 @@
       modo: dados.modo || "quantidade",
       quantidade: (dados.pokemons || []).length,
       pokemons: dados.pokemons || [],
-      top10_mais_fortes: dados.ranking || []
+      top10_mais_fortes: dados.ranking || [],
+      estrategia_ataques: dados.estrategia || null
     };
     baixarArquivoJson("dados_coletados_" + timestampArquivo() + ".json", pacote);
   }
@@ -95,7 +97,8 @@
       progresso: dados.progresso || { atual: 0, total: 0 },
       quantidade: (dados.pokemons || []).length,
       pokemons: dados.pokemons || [],
-      top10_mais_fortes: dados.ranking || []
+      top10_mais_fortes: dados.ranking || [],
+      estrategia_ataques: dados.estrategia || null
     };
     baixarArquivoJson("pokedex_exportacao_completa_" + timestampArquivo() + ".json", pacote);
   }
@@ -168,9 +171,31 @@
     }
 
     if (!e.telaConfig.classList.contains("aberta")){
-      itens.push({ rotulo: "Abrir configurações", acao: configuracao.abrirConfig });
+      itens.push({
+        rotulo: "Abrir configurações",
+        acao: () => {
+          if (estrategia){
+            estrategia.fecharEstrategia();
+          }
+          configuracao.abrirConfig();
+        }
+      });
     } else {
       itens.push({ rotulo: "Fechar configurações", acao: configuracao.fecharConfig });
+    }
+
+    if (estrategia){
+      if (!e.telaEstrategia.classList.contains("aberta")){
+        itens.push({
+          rotulo: "Abrir estratégia",
+          acao: () => {
+            configuracao.fecharConfig();
+            estrategia.abrirEstrategia();
+          }
+        });
+      } else {
+        itens.push({ rotulo: "Fechar estratégia", acao: estrategia.fecharEstrategia });
+      }
     }
 
     if (e.telaCarta.classList.contains("aberta")){
@@ -309,10 +334,24 @@
         evolucoes.textContent = "Evoluções: não disponíveis nesta coleta.";
       }
 
+      const papel = document.createElement("div");
+      papel.className = "papel";
+      papel.textContent = "Papel tático: " + (pokemon.papel_tatico || "equilibrado");
+
+      const golpes = document.createElement("div");
+      golpes.className = "golpes";
+      if ((pokemon.golpes_recomendados || []).length > 0){
+        golpes.textContent = "Golpes sugeridos: " + pokemon.golpes_recomendados.slice(0, 3).map((golpe) => golpe.nome_exibicao || golpe.nome).join(" | ");
+      } else {
+        golpes.textContent = "Golpes sugeridos: gere uma estratégia para analisar este Pokémon.";
+      }
+
       cardItem.appendChild(topo);
       cardItem.appendChild(imagem);
       cardItem.appendChild(tipos);
       cardItem.appendChild(stats);
+      cardItem.appendChild(papel);
+      cardItem.appendChild(golpes);
       cardItem.appendChild(evolucoes);
       e.grade.appendChild(cardItem);
     }
@@ -364,6 +403,9 @@
     }
 
     configuracao.liberarBotaoSalvar();
+    if (estrategia){
+      estrategia.atualizarStatus(dados);
+    }
 
     if (e.seletorModo.value !== (dados.modo || "quantidade") && dados.em_execucao){
       e.seletorModo.value = dados.modo || "quantidade";
@@ -391,6 +433,9 @@
       desenharLogs(dados.logs);
       desenharRanking(dados.ranking);
       desenharCards(dados.pokemons);
+      if (estrategia){
+        estrategia.desenharEstrategia(dados.estrategia, dados);
+      }
       configuracao.desenharConfiguracao(dados);
     } catch (erro){
       e.visor.textContent = "Status: falha ao atualizar interface";
@@ -399,7 +444,7 @@
 
   async function iniciarColeta(){
     const modo = e.seletorModo.value;
-    const quantidade = base.normalizarCampoNumerico(e.inputQuantidade, 151);
+    const quantidade = base.normalizarCampoNumerico(e.inputQuantidade, 0);
     try{
       const dados = await base.lerJson("/iniciar", {
         method: "POST",
@@ -483,7 +528,19 @@
     apagarColeta();
   });
 
-  e.botaoConfigTopo.addEventListener("click", configuracao.abrirConfig);
+  if (e.botaoEstrategiaTopo && estrategia){
+    e.botaoEstrategiaTopo.addEventListener("click", () => {
+      configuracao.fecharConfig();
+      carta.fecharCarta();
+      estrategia.abrirEstrategia();
+    });
+  }
+  e.botaoConfigTopo.addEventListener("click", () => {
+    if (estrategia){
+      estrategia.fecharEstrategia();
+    }
+    configuracao.abrirConfig();
+  });
   e.botaoFecharConfig.addEventListener("click", configuracao.fecharConfig);
   e.botaoSalvarConfig.addEventListener("click", async () => {
     await configuracao.salvarConfiguracao();
@@ -547,6 +604,9 @@
     if (evento.key === "Escape"){
       fecharMenuContexto();
       configuracao.fecharConfig();
+      if (estrategia){
+        estrategia.fecharEstrategia();
+      }
       carta.fecharCarta();
       base.fecharPopup();
     }
@@ -555,6 +615,9 @@
   base.atualizarCamposColeta();
   carta.atualizarRotuloGiroCarta();
   base.iniciarAbertura();
+  if (estrategia){
+    estrategia.preencherTipos();
+  }
   lerEstado();
   setInterval(lerEstado, 1200);
 
