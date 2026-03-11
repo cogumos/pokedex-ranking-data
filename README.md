@@ -6,10 +6,7 @@ Projeto em Python com Flask e Selenium para coletar dados da PokéAPI e exibi-lo
 
 ## Vídeo de exemplo
 
-<video controls width="100%">
-  <source src="assets/video/pokemon.mp4" type="video/mp4">
-  Seu renderizador de Markdown não suporta vídeo incorporado. Use o link abaixo para abrir o arquivo.
-</video>
+https://github.com/user-attachments/assets/169b9531-aa51-450a-b065-cb8eff231c27
 
 [Abrir vídeo de exemplo](assets/video/pokemon.mp4)
 
